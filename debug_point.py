@@ -11,7 +11,7 @@ def plot_3d_scatter(points_2d_list, title="3D Scatter Plot", point_color='blue',
     
     # 输入格式校验
     if points.ndim != 2 or points.shape[1] != 3:
-        raise ValueError(f"输入坐标格式错误！需为二维列表（每行x,y,z），当前输入维度：{points.shape}")
+        raise ValueError(f"输入坐标格式错误! 需为二维列表(每行x,y,z), 当前输入维度：{points.shape}")
     
     # 2. 自动拆分x/y/z分量
     x = points[:, 0]

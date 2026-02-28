@@ -19,7 +19,7 @@ try:
     # 引入 TopologyUtils 用于高级拓扑检查 (来自 pythonocc-core)
     from OCC.Extend import TopologyUtils
 except ImportError:
-    print("错误: 未检测到 pythonocc-core 库。")
+    print("错误: 未检测到 pythonocc-core 库")
     print("请使用 conda 安装: conda install -c conda-forge pythonocc-core")
     sys.exit(1)
 
@@ -62,7 +62,7 @@ class AdvancedValidator:
     def check_closed(self, body):
         """
         检查是否封闭。
-        逻辑：对比 Wire 中的边和拓扑遍历发现的边。如果有边不在 Wire 中，说明是游离边（非封闭）。
+        逻辑：对比 Wire 中的边和拓扑遍历发现的边。如果有边不在 Wire 中，说明是游离边（非封闭）
         """
         top_exp = TopologyUtils.TopologyExplorer(body, ignore_orientation=False)
         edges_from_wires = self.find_edges_from_wires(top_exp)
@@ -108,7 +108,7 @@ class AdvancedValidator:
     def has_internal_voids(self, shape) -> bool:
         """
         内腔检测 (原脚本逻辑)
-        一个 Solid 如果包含 >1 个 Shell，通常意味着有内腔
+        一个 Solid 如果包含 >1 个 Shell, 通常意味着有内腔
         """
         solid_explorer = TopExp_Explorer(shape, TopAbs_SOLID)
         while solid_explorer.More():

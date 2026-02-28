@@ -62,21 +62,21 @@ def plot_distribution(data_list, title, xlabel, ylabel, save_path, color='skyblu
     
     plt.savefig(save_path)
     plt.close()
-    print(f"   📈 图片已保存至: {save_path}")
+    print(f"图片已保存至: {save_path}")
 
 def calculate_graph_stats(name, node_counts, avg_degrees):
     """
     [新增] 计算并打印图统计指标
     """
     if not node_counts:
-        print(f"   ⚠️ {name} 无有效数据")
+        print(f"{name} 无有效数据")
         return
 
     # 转换为 numpy 数组方便计算
     nodes = np.array(node_counts)
     degs = np.array(avg_degrees)
 
-    print(f"\n   📘 {name} 统计指标:")
+    print(f"\n     {name} 统计指标:")
     print(f"     • 节点数量 (Nodes):")
     print(f"       - Max: {np.max(nodes)}")
     print(f"       - Min: {np.min(nodes)}")
@@ -89,8 +89,8 @@ def calculate_graph_stats(name, node_counts, avg_degrees):
 
 def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
     print("="*60)
-    print(f"🔬 全量数据深度体检报告 (Deep Data Inspection)")
-    print(f"📂 数据源: {data_root}/{processed_dir}")
+    print(f"数据检查报告 (Deep Data Inspection)")
+    print(f"数据源: {data_root}/{processed_dir}")
     print("="*60)
 
     try:
@@ -100,11 +100,11 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
                               processed_dir_name=processed_dir,
                               force_process=False)
     except Exception as e:
-        print(f"❌ 严重错误: Dataset 加载失败 - {e}")
+        print(f"严重错误: Dataset 加载失败 - {e}")
         return
 
     total_files = len(dataset)
-    print(f"📚 样本总数: {total_files}")
+    print(f"样本总数: {total_files}")
 
     # --- 统计容器 ---
     stats = {
@@ -145,7 +145,7 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
     LARGE_VALUE_THRESHOLD = 1000.0
     ZERO_TOLERANCE = 1e-6          
 
-    print("\n🔍 正在逐个扫描文件特征...")
+    print("\n 正在逐个扫描文件特征...")
     
     for i in tqdm(range(total_files)):
         try:
@@ -292,34 +292,34 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
 
     # --- 生成最终报告 ---
     print("\n" + "="*60)
-    print("📊 诊断结果报告 (Diagnostic Report)")
+    print("检测结果报告 (Diagnostic Report)")
     print("="*60)
 
     # 1. 面积极值定位 (核心需求)
-    print("\n[1] 🎯 面积特征 (Dim 0) 极值定位:")
+    print("\n[1] 面积特征 (Dim 0) 极值定位:")
     print("-" * 60)
     
     max_info = stats['area_max']
-    print(f"🔴 全局最大面积: {max_info['val']:.4f}")
+    print(f" 全局最大面积: {max_info['val']:.4f}")
     print(f"   - 文件: {max_info['file']}")
     print(f"   - 节点索引: {max_info['node_idx']}")
     print("-" * 30)
     
     min_info = stats['area_min']
-    print(f"🔵 全局最小面积: {min_info['val']:.4f}")
+    print(f"全局最小面积: {min_info['val']:.4f}")
     print(f"   - 文件: {min_info['file']}")
     print(f"   - 节点索引: {min_info['node_idx']}")
     print("-" * 60)
 
     # 2. 负面积警告
     if len(stats['negative_area_files']) > 0:
-        print(f"\n⚠️ 发现 {len(stats['negative_area_files'])} 个文件包含负面积 (Negative Area)!")
+        print(f"\n 发现 {len(stats['negative_area_files'])} 个文件包含负面积 (Negative Area)!")
         for item in stats['negative_area_files'][:5]:
             print(f"  - 文件: {item['file']}")
             print(f"    值: {item['values']}")
             print(f"    索引: {item['indices']}")
     else:
-        print("\n✅ 未发现负面积特征。")
+        print("\n 未发现负面积特征。")
 
     # 3. 几何特征分布统计
     if stats['geom_feat_accum'] is not None:
@@ -338,22 +338,20 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
         stds = torch.sqrt((sq_sums / count) - (means ** 2) + 1e-6)
         
         for dim in range(len(means)):
-            status = "🔴 OVERFLOW" if maxs[dim] > 1000 else ("🟡 Large" if maxs[dim] > 100 else "✅ Normal")
+            status = " OVERFLOW" if maxs[dim] > 1000 else (" Large" if maxs[dim] > 100 else " Normal")
             print(f"{dim:<5} | {mins[dim]:<10.2f} | {maxs[dim]:<10.2f} | {means[dim]:<10.2f} | {stds[dim]:<10.2f} | {status}")
         print("-" * 85)
 
     # 4. 标签统计
-    print("\n[3] 🎯 语义标签统计 (Semantic Labels):")
+    print("\n[3] 语义标签统计 (Semantic Labels):")
     print("-" * 60)
     max_label_idx = stats['max_sem_label']['val']
     
-    print(f"🏷️  全局最大标签索引 (Max Label Index): {max_label_idx}")
+    print(f"  全局最大标签索引 (Max Label Index): {max_label_idx}")
     print(f"   - 出现文件: {stats['max_sem_label']['file']}")
-    print(f"   👉 建议 num_classes 设置至少为: {max_label_idx + 1}")
-    if max_label_idx >= 25:
-        print("   ⚠️  注意: 检测到标签 >= 25，这解释了之前的 CUDA error。")
-    
-    print("\n📊 类别分布详情 (Class Distribution):")
+    print(f"    建议 num_classes 设置至少为: {max_label_idx + 1}")
+
+    print("\n 类别分布详情 (Class Distribution):")
     print(f"   {'Class ID':<10} | {'Count':<10} | {'Percentage':<12} | {'Status'}")
     print("-" * 65)
     
@@ -363,13 +361,13 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
         percentage = (count / total_labels) * 100 if total_labels > 0 else 0.0
         status = ""
         if count == 0:
-            status = "❌ ZERO SAMPLE (从未出现)"
+            status = " ZERO SAMPLE (从未出现)"
         elif percentage < 0.1:
-            status = "⚠️ Rare (<0.1%)"
+            status = " Rare (<0.1%)"
         elif percentage < 1.0:
-            status = "🟡 Uncommon (<1%)"
+            status = " Uncommon (<1%)"
         else:
-            status = "✅ Normal"
+            status = " Normal"
         print(f"   {cls_id:<10} | {count:<10} | {percentage:<11.2f}% | {status}")
     print("-" * 65)
     print(f"   总计样本 (Nodes): {total_labels}")
@@ -384,13 +382,13 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
     # =========================================================
     # [新增] 6. 图结构统计与可视化
     # =========================================================
-    print(f"\n[5] 📉 图结构统计 (Graph Structure Statistics):")
+    print(f"\n[5]  图结构统计 (Graph Structure Statistics):")
     print("-" * 60)
     
     # 准备保存目录
     analysis_dir = os.path.join(data_root, 'analysis_results')
     os.makedirs(analysis_dir, exist_ok=True)
-    print(f"   📂 统计图表将保存至: {analysis_dir}")
+    print(f"    统计图表将保存至: {analysis_dir}")
 
     # --- Topo Graph ---
     calculate_graph_stats("Topo Graph", 
@@ -434,7 +432,7 @@ def analyze_dataset(data_root, raw_dir, processed_dir, label_dir):
                       save_path=os.path.join(analysis_dir, 'geom_avg_degree_dist.png'),
                       color='forestgreen')
     
-    print("\n✅ 所有统计分析完成!")
+    print("\n 所有统计分析完成!")
 
 if __name__ == "__main__":
     # 配置
