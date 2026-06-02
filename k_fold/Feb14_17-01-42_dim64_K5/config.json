@@ -1,0 +1,126 @@
+{
+    "data_root": "./data",
+    "raw_dir_name": "raw_steps_f",
+    "label_dir_name": "raw_labels_f",
+    "processed_dir_name": "processed_f",
+    "uv_sample": [
+        5,
+        5,
+        5
+    ],
+    "device": "cuda",
+    "num_workers": 4,
+    "seed": 42,
+    "split_ratio": [
+        0.7,
+        0.15,
+        0.15
+    ],
+    "check_batch": false,
+    "batch_size": 256,
+    "epochs": 100,
+    "lr": 0.005,
+    "weight_decay": 0.01,
+    "use_lrs": true,
+    "use_warmup": true,
+    "warmup_rate": 0.25,
+    "warmup_start_div_factor": 25.0,
+    "warmup_final_div_factor": 10000.0,
+    "grad_clip": true,
+    "grad_clip_num": 1.5,
+    "use_mtl": false,
+    "log_var_limit": [
+        -2,
+        5
+    ],
+    "lambda_sem": 1.0,
+    "lambda_inst": 2,
+    "lambda_bottom": 0.5,
+    "use_ema": true,
+    "ema_decay": 0.999,
+    "use_swa": false,
+    "swa_start_epoch": 100,
+    "swa_lr": 0.0005,
+    "model": {
+        "hidden_dim": 64,
+        "dropout": 0.2,
+        "num_classes": 25,
+        "topo_enable": true,
+        "geom_enable": false,
+        "topo_defs": {
+            "0": {
+                "gnn": "gated_gcn"
+            },
+            "1": {
+                "gnn": "gated_gcn"
+            },
+            "2": {
+                "gnn": "gated_gcn"
+            },
+            "3": {
+                "gnn": "gated_gcn"
+            }
+        },
+        "geom_defs": {
+            "0": {
+                "gnn": "gated_gcn"
+            },
+            "1": {
+                "gnn": "gated_gcn"
+            },
+            "2": {
+                "gnn": "gated_gcn"
+            },
+            "3": {
+                "gnn": "gated_gcn"
+            }
+        },
+        "use_GNN_post": false,
+        "fusion_defs": {
+            "0": {
+                "method": "film",
+                "dir": "^"
+            },
+            "1": {
+                "method": "film",
+                "dir": "^"
+            },
+            "2": {
+                "method": "film",
+                "dir": "^"
+            }
+        },
+        "topo_flow": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "geom_flow": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "fusion_flow": [
+            "0>",
+            "1>",
+            "2>",
+            "None="
+        ],
+        "final_fusion": {
+            "method": "concat",
+            "stream_usage": "both"
+        },
+        "decoder_type": {
+            "sem": "mlp_multi_class",
+            "inst": "bilinear_head",
+            "bot": "mlp_bin_class",
+            "symmetric_model": "soft"
+        },
+        "geom_node_feat_indices": null,
+        "geom_edge_feat_indices": null,
+        "topo_node_feat_indices": null,
+        "topo_edge_feat_indices": null
+    }
+}
